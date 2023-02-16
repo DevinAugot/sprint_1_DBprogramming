@@ -15,10 +15,10 @@ restAPP.get("/", (request, response) => {
   response.json({ info: "Node.js, Express, and Postgres API" });
 });
 
-restAPP.get("/students", pgDBAccessLayer.getStudents);
-restAPP.post("/student", pgDBAccessLayer.createStudent);
-restAPP.put("/student/:id", pgDBAccessLayer.updateStudent);
-restAPP.delete("/student/:id", pgDBAccessLayer.deleteStudent);
+restAPP.get("/airport_city", pgDBAccessLayer.getAirportCities);
+// restAPP.post("/student", pgDBAccessLayer.createStudent);
+// restAPP.put("/student/:id", pgDBAccessLayer.updateStudent);
+// restAPP.delete("/student/:id", pgDBAccessLayer.deleteStudent);
 
 // start the Express server
 restAPP.listen(port, () => {
