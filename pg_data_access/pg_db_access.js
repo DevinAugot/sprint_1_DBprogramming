@@ -21,16 +21,19 @@ const getAirportCities = (request, response) => {
   );
 };
 
-// # 2. list all aircraft passengers have travelled on
+// # 2. list all aircraft passengers have travelled on (working)
 const getAircraftPassenger = (request, response) => {
-  pool.query("SELECT * FROM aircraft, WHERE passenger_id = aircraft_id", (error, results) => {
-    if (error) {
-      throw error;
+  pool.query(
+    "SELECT * FROM aircraft a, passengers p WHERE a.passenger_id = p.pass_id",
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(results.rows);
     }
-    response.status(200).json(results.rows);
-  });
+  );
 };
-// # 3 whic airports can aircraft take off from and land at? 
+// # 3 which airports can aircraft take off from and land at? (working)
 const getAircraftAirport = (request, response) => {
   pool.query("SELECT * FROM airport_aircraft", (error, results) => {
     if (error) {
@@ -40,41 +43,18 @@ const getAircraftAirport = (request, response) => {
   });
 };
 
-// const deleteStudent = (request, response) => {
-//   const id = parseInt(request.params.id); // when using deletes make sure to use WHERE clauses
-
-//   pool.query("DELETE FROM student WHERE id = $1", [id], (error, results) => {
-//     if (error) {
-//       throw error;
-//     }
-//     response.status(200).send(`Student deleted with ID: ${id}`);
-//   });
-// };
-
-// const updateStudent = (request, response) => {
-//   const id = parseInt(request.params.id);
-//   const { first_name, last_name, student_id, address_id } = request.body;
-
-//   pool.query(
-//     "UPDATE student SET first_name = $1, last_name = $2, student_id = $3, address_id = $4 WHERE id = $5",
-//     [first_name, last_name, student_id, address_id, id],
-//     (error, results) => {
-//       if (error) {
-//         throw error;
-//       }
-//       response.status(200).send(`Student modified with ID: ${id}`);
-//     }
-//   );
-// };
-
-// module.exports = {
-//   getStudents,
-//   createStudent,
-//   updateStudent,
-// };
-
+// #4. What airports have passengers used? (Airports can only be in one city)
+const getAirportPassenger = (request, response) => {
+  pool.query("SELECT * FROM passengers, airports WHERE home_city_id = airport_id ", (error, results) => {
+    if (error) {
+      throw error;
+    }
+    response.status(200).json(results.rows);
+  });
+};
 module.exports = {
   getAirportCities,
   getAircraftPassenger,
-  getAircraftAirport
+  getAircraftAirport,
+  getAirportPassenger,
 };
