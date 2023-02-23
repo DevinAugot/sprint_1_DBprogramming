@@ -7,11 +7,11 @@ const pool = new Pool({
   port: 5432,
 });
 
-// #1. What airports are in what cities? (this works! http://localhost:3000/airport_city)
+// #1. What airports are in what cities? (WORKING WITH INNER JOIN! http://localhost:3000/airport_city)
 
 const getAirportCities = (request, response) => {
   pool.query(
-    "SELECT * FROM airports, cities WHERE airport_id = city_id",
+    "SELECT * FROM airports INNER JOIN cities ON airport_id = city_id",
     (error, results) => {
       if (error) {
         throw error;
@@ -21,10 +21,11 @@ const getAirportCities = (request, response) => {
   );
 };
 
-// # 2. list all aircraft passengers have travelled on (working)
+// # 2. list all aircraft passengers have travelled on (working with INNER JOIN)
+
 const getAircraftPassenger = (request, response) => {
   pool.query(
-    "SELECT * FROM aircraft a, passengers p WHERE a.passenger_id = p.pass_id",
+    "SELECT * FROM aircraft a INNER JOIN passengers p ON a.passenger_id = p.pass_id",
     (error, results) => {
       if (error) {
         throw error;
@@ -33,9 +34,11 @@ const getAircraftPassenger = (request, response) => {
     }
   );
 };
+
 // # 3 which airports can aircraft take off from and land at? (working)
+
 const getAircraftAirport = (request, response) => {
-  pool.query("SELECT * FROM airport_aircraft", (error, results) => {
+  pool.query("SELECT a.airport_id, ac.aircraft_id from airports a, aircraft ac, airport_aircraft ap WHERE a.airport_id = ap.airport_id AND ac.aircraft_id = ap.aircraft_id ", (error, results) => {
     if (error) {
       throw error;
     }
@@ -43,14 +46,18 @@ const getAircraftAirport = (request, response) => {
   });
 };
 
-// #4. What airports have passengers used? (Airports can only be in one city)
+// #4. What airports have passengers used? (Airports can only be in one city)(working with INNER JOIN, thinking was that passengers would more likley to use home city airport )
+
 const getAirportPassenger = (request, response) => {
-  pool.query("SELECT * FROM passengers, airports WHERE home_city_id = airport_id ", (error, results) => {
-    if (error) {
-      throw error;
+  pool.query(
+    "SELECT * FROM passengers INNER JOIN airports ON home_city_id = airport_id ",
+    (error, results) => {
+      if (error) {
+        throw error;
+      }
+      response.status(200).json(results.rows);
     }
-    response.status(200).json(results.rows);
-  });
+  );
 };
 module.exports = {
   getAirportCities,
