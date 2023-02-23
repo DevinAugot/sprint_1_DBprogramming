@@ -35,10 +35,10 @@ const getAircraftPassenger = (request, response) => {
   );
 };
 
-// # 3 which airports can aircraft take off from and land at? (working)(table already show multiple aircraft taking off or landing at many aiports so join not needed)
+// # 3 which airports can aircraft take off from and land at? (working)
 
 const getAircraftAirport = (request, response) => {
-  pool.query("SELECT * FROM airport_aircraft", (error, results) => {
+  pool.query("SELECT a.airport_id, ac.aircraft_id from airports a, aircraft ac, airport_aircraft ap WHERE a.airport_id = ap.airport_id AND ac.aircraft_id = ap.aircraft_id ", (error, results) => {
     if (error) {
       throw error;
     }
