@@ -4,15 +4,20 @@ const restAPP = express();
 const pgDBAccessLayer = require("./pg_data_access/pg_db_access");
 const port = 3000;
 
+
 restAPP.use(bodyParser.json());
+
 restAPP.use(
+  
   bodyParser.urlencoded({
     extended: true,
   })
 );
 
 restAPP.get("/", (request, response) => {
-  response.json({ info: "Node.js, Express, and Postgres API" });
+  response.sendFile(__dirname + "/index.html")
+ 
+  // response.json({ info: "Node.js, Express, and Postgres API" });
 });
 
 // working
